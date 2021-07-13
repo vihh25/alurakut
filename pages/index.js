@@ -1,25 +1,36 @@
 import { useEffect, useState } from 'react'
 import Box from '../src/components/Box'
 import MainGrid from '../src/components/MainGrid'
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
-import { getFollowers } from '../src/components/ProfileRelations/actions'
+import { ProfileRelations, ProfileRelationsBoxWrapper, getFollowers } from '../src/components/ProfileRelations'
+import ProfileSidebar from '../src/components/ProfileSidebar'
 import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
+import ComunidadeForm from './ComunidadeForm'
 
-function ProfileSidebar(props) {
-  
-  return (
-    <Box>
-      {props.githubUser === undefined ? 
-      <img style={{ borderRadius: '8px' }} src={`https://i.stack.imgur.com/34AD2.jpg`} />
-      : <img style={{ borderRadius: '8px' }} src={`https://github.com/${props.githubUser}.png`} /> }
-    </Box>
-  );
-}
+const comunidadesDefault = [
+  {
+    id: 123,
+    title: 'The Paper Kites',
+    image: 'https://i1.sndcdn.com/avatars-000212503053-fmz4a9-t240x240.jpg',
+    urlRef: 'https://open.spotify.com/artist/79hrYiudVcFyyxyJW0ipTy'
+  },
+  {
+    id: 124,
+    title: 'Só mais 5 minutinhos',
+    image: 'https://img10.orkut.br.com/community/02a28e50242e7904b5271c2652862af3.jpg',
+    urlRef: 'https://youtu.be/q76bMs-NwRk'
+  },
+  {
+    id: 125,
+    title: 'Disk MTV Anos 2000',
+    image: 'https://upload.wikimedia.org/wikipedia/pt/e/e6/Disk_MTV_logo.jpg',
+    urlRef: 'https://open.spotify.com/playlist/27L9YuAbvWv2N5hJJFS81j?si=c55cdccb5aea4cc4'
+  },
+]
 
 export default function Home() {
 
   const [followersInfo, setFollowersInfo] = useState({});
-  
+  const [comunidades, setComunidades] = useState(comunidadesDefault);
   const githubUser = 'vihh25';
 
   // Lista de usuários do github utilizados como exemplo: ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'marcobrunodev', 'felipefialho']
@@ -43,35 +54,15 @@ export default function Home() {
             </h1>
             <OrkutNostalgicIconSet />
           </Box>
+          <ComunidadeForm comunidades={comunidades} setComunidades={setComunidades}/>
         </div>
         <div className="profileRelationsArea" style={{gridArea: 'profileRelationsArea'}}>
           <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Pessoas da comunidade  
-              <a style={{paddingLeft: 4, fontWeight: '700', color: '#2E7BB4'}} href={'/friends'}>
-                ({followersInfo.followersNumber})
-              </a>
-            </h2>
-              <ul>
-                {followersInfo && followersInfo.followersToShow && followersInfo.followersToShow.length > 0 && followersInfo.followersToShow.map(it => {
-                  return (
-                    <div key={it.username} style={{display: 'flex', flexDirection: 'column', textAlign: 'center'}}>
-                      <li>
-                          <a href={`/users/${it.username}`} key={it.username}>
-                            <img src={`https://github.com/${it.username}.png`} />
-                          </a>
-                      </li>
-                      <a href={`/users/${it.username}`} key={it.username}>
-                        <span style={{wordBreak: 'break-word', color: '#2E7BB4', fontWeight: '400'}}>{it.username} ({it.followers})</span>
-                      </a>
-                    </div>
-                  )
-                })}
-              </ul>
+            <ProfileRelations title='Pessoas da comunidade' href='/friends' quantidade={followersInfo.quantidade} lista={followersInfo.followersToShow}/>
           </ProfileRelationsBoxWrapper>
-          {/* <Box>
-            Comunidades
-          </Box> */}
+          <ProfileRelationsBoxWrapper>
+            <ProfileRelations title='Comunidades' href='/communities' quantidade={comunidades.length} lista={comunidades}/>
+          </ProfileRelationsBoxWrapper>
         </div>
 
       </MainGrid>

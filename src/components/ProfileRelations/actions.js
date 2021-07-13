@@ -14,7 +14,7 @@ export async function getFollowers(user) {
     })
 
     return {
-        followersNumber: apiResponseJson.length,
+        quantidade: apiResponseJson.length,
         followersToShow: followersToShow
     };
 }
@@ -25,7 +25,9 @@ async function getFollowersInfo(user) {
     const apiFollowerNumber = await apiFollowerResponse.json();
 
     return {
-        username: user,
-        followers: apiFollowerNumber.length
+        id: user,
+        title: `${user} (${apiFollowerNumber.length})`,
+        image: `https://github.com/${user}.png`,
+        urlRef: `https://github.com/${user}`
     };
 }
