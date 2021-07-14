@@ -84,8 +84,6 @@ export async function getCommunities() {
         }
     });
 
-    console.log(resultadoJson)
-
     return {
         comunidades,
         total: resultadoJson.data._allCommunitiesMeta.count
