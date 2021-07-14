@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Box from '../src/components/Box'
+import LoadingBox from '../src/components/LoadingBox'
 import MainGrid from '../src/components/MainGrid'
 import { ProfileRelations, ProfileRelationsBoxWrapper, getFollowers } from '../src/components/ProfileRelations'
 import ProfileSidebar from '../src/components/ProfileSidebar'
@@ -31,16 +32,26 @@ export default function Home() {
 
   const [followersInfo, setFollowersInfo] = useState({});
   const [comunidades, setComunidades] = useState(comunidadesDefault);
+  const isLoading = useRef(false);
   const githubUser = 'vihh25';
 
   // Lista de usuários do github utilizados como exemplo: ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'marcobrunodev', 'felipefialho']
 
   useEffect(async () => {
-    setFollowersInfo(await getFollowers(githubUser));
+    isLoading.current = true;
+    getFollowers(githubUser).then((response) => {
+      isLoading.current = false;
+      if (response === undefined) {
+        setFollowersInfo([]);
+      } else {
+        setFollowersInfo(response);
+      }      
+    });
   }, []);
 
   return (
     <>
+      <LoadingBox isLoading={isLoading.current}/>
       <AlurakutMenu githubUser={githubUser}/>
       <MainGrid>
 
@@ -53,6 +64,10 @@ export default function Home() {
               Bem vindo(a)
             </h1>
             <OrkutNostalgicIconSet />
+            <text style={{fontSize: 14, fontFamily: 'sans-serif'}}>
+              <br/>
+              <b>Sorte de hoje: </b> Evite tomar decisões precipitadas.
+            </text>
           </Box>
           <ComunidadeForm comunidades={comunidades} setComunidades={setComunidades}/>
         </div>

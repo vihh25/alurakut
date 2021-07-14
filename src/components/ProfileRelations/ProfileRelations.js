@@ -7,7 +7,7 @@ export function ProfileRelations(props) {
             <h2 className="smallTitle">
                 {props.title}
                 <a className="boxLink" style={{paddingLeft: '4px'}} href={props.href}>
-                    ({props.quantidade})
+                    ({props.quantidade ? props.quantidade : 0})
                 </a>
             </h2>
                 <ul>
