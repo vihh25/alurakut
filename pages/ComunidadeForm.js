@@ -1,8 +1,7 @@
 import Box from "../src/components/Box";
+import { pushCommunity } from "../src/components/ProfileRelations/actions";
 
 export default function ComunidadeForm(props) {
-
-    const comunidades = props.comunidades;
 
     return (
         <Box>
@@ -11,6 +10,7 @@ export default function ComunidadeForm(props) {
             </h2>
             <form onSubmit={(e) => {
                 e.preventDefault();
+                props.setLoading(true);
                 const dados = new FormData(e.target)
                 var imagem = dados.get('image');
                 if (dados.get('title') === undefined || dados.get('title') === '') {
@@ -26,12 +26,15 @@ export default function ComunidadeForm(props) {
                 return;
                 }
 
-                props.setComunidades([...comunidades, {
+                const comunidade = {
                     title: dados.get('title'),
                     image: imagem,
-                    urlRef: dados.get('urlRef'),
-                    id: new Date().toISOString()
-                }]);
+                    urlRef: dados.get('urlRef')
+                };
+
+                pushCommunity(comunidade).then(() => {
+                    props.setReloadCommunity(true);
+                });
             }}>
                 <div>
                 <input

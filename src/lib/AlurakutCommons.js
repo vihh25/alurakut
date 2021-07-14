@@ -2,6 +2,8 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
 
+export const TOKEN_DATO = 'Bearer 0c4c8c6521689746f4cff827400b9e';
+export const URL_DATO = 'https://graphql.datocms.com/';
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
 
