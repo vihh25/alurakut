@@ -18,16 +18,19 @@ export default function Home() {
 
   const pessoasComunidade = [
     {
+      id: 123,
       title: 'juunegreiros',
       image: `https://github.com/juunegreiros.png`,
       urlRef: `https://github.com/juunegreiros`
     },
     {
+      id: 124,
       title: 'omariosouto',
       image: `https://github.com/omariosouto.png`,
       urlRef: `https://github.com/omariosouto`
     },
     {
+      id: 125,
       title: 'peas',
       image: `https://github.com/peas.png`,
       urlRef: `https://github.com/peas`

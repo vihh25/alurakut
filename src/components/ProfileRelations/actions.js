@@ -1,6 +1,6 @@
-import { TOKEN_DATO, URL_DATO } from "../../lib/AlurakutCommons";
+import { URL_DATO } from "../../lib/AlurakutCommons";
 const { SiteClient } = require("datocms-client");
-const client = new SiteClient(TOKEN_DATO);
+const client = new SiteClient(process.env.NEXT_PUBLIC_DATOCMS_TOKEN);
 
 export async function getFollowers(user) {
     
@@ -64,7 +64,7 @@ export async function getCommunities() {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': TOKEN_DATO
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_DATOCMS_TOKEN}`
             },
         }
     )
@@ -93,7 +93,7 @@ export async function getCommunities() {
 export async function pushCommunity(dadosComunidade) {
     try {
         await client.items.create({
-            itemType: '966632',
+            itemType: process.env.NEXT_PUBLIC_ITEM_TYPE_COMMUNITY,
             title: dadosComunidade.title,
             imageUrl: dadosComunidade.image,
             referenceUrl: dadosComunidade.urlRef,
