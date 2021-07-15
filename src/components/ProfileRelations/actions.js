@@ -1,7 +1,3 @@
-import { URL_DATO } from "../../lib/AlurakutCommons";
-const { SiteClient } = require("datocms-client");
-const client = new SiteClient(process.env.NEXT_PUBLIC_DATOCMS_TOKEN);
-
 export async function getFollowers(user) {
     
     const urlUser = `https://api.github.com/users/${user}`;
@@ -57,17 +53,7 @@ async function getFollowersInfo(user) {
 }
 
 export async function getCommunities() {
-    const resultado = await fetch(
-        URL_DATO + '?query={allCommunities(first: 9, orderBy: [_firstPublishedAt_ASC]) {id, title, imageUrl, referenceUrl, _status, _firstPublishedAt}, _allCommunitiesMeta {count}}',
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_DATOCMS_TOKEN}`
-            },
-        }
-    )
+    const resultado = await fetch('/api/getComunidades')
 
     if (!resultado.ok) {
         alert('Não foi possível retornar as comunidades. Erro HTTP: ' + resultado.status);
@@ -75,30 +61,52 @@ export async function getCommunities() {
     }
 
     const resultadoJson = await resultado.json();
-    const comunidades = resultadoJson.data.allCommunities.map((it) => {
-        return {
-            id: it.id,
-            title: it.title,
-            image: it.imageUrl,
-            urlRef: it.referenceUrl
-        }
-    });
 
-    return {
-        comunidades,
-        total: resultadoJson.data._allCommunitiesMeta.count
-    }
+    return resultadoJson;
 }
 
 export async function pushCommunity(dadosComunidade) {
-    try {
-        await client.items.create({
-            itemType: process.env.NEXT_PUBLIC_ITEM_TYPE_COMMUNITY,
-            title: dadosComunidade.title,
-            imageUrl: dadosComunidade.image,
-            referenceUrl: dadosComunidade.urlRef,
-        });
-    } catch (e) {
-        throw e;
+
+    const comunidade = {
+        title: dadosComunidade.title,
+        imageUrl: dadosComunidade.image,
+        referenceUrl: dadosComunidade.urlRef,
+    };
+
+    await fetch(
+        'api/postComunidade', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(comunidade)
+    })
+    
+}
+
+export async function getScraps() {
+    const resultado = await fetch('/api/getScraps')
+
+    if (!resultado.ok) {
+        alert('Não foi possível retornar os scraps. Erro HTTP: ' + resultado.status);
+        return;
     }
+
+    const resultadoJson = await resultado.json();
+
+    return resultadoJson;
+}
+
+export async function pushScrap(dadosScrap) {
+    await fetch(
+        'api/postScrap', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(dadosScrap)
+        }
+    )
 }

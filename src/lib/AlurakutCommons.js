@@ -274,9 +274,7 @@ export function OrkutNostalgicIconSet(props) {
         { name: 'Legal', slug: 'legal', icon: 'cool' },
         { name: 'Sexy', slug: 'sexy', icon: 'heart' },
       ].map(({ name, slug, icon }) => {
-        const totalConfiavel = props[slug] ? props[slug] : 3;
-        const totalLegal = props[slug] ? props[slug] : 2;
-        const totalSexy = props[slug] ? props[slug] : 0;
+        const total = props[slug] ? props[slug] : 0;
         return (
           <li key={`orkut__icon_set__${slug}`}>
             <span className="OrkutNostalgicIconSet__title">
@@ -284,7 +282,7 @@ export function OrkutNostalgicIconSet(props) {
             </span>
             <span className="OrkutNostalgicIconSet__iconComplex" className="OrkutNostalgicIconSet__number" style={{ gridArea: 'number' }}>
               {[0, 1, 2].map((_, index) => {
-                const isHeartActive = index <= ((name === 'Confiável' ? totalConfiavel : name === 'Legal' ? totalLegal : totalSexy) - 1);
+                const isHeartActive = index <= (total - 1);
                 return <img key={`orkut__icon_set__${slug}_img_${index}`} src={`https://alurakut.vercel.app/icons/${icon}.svg`} style={{ marginRight: '2px', opacity: isHeartActive ? 1 : '0.5' }} />
               })}
             </span>

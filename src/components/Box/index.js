@@ -49,6 +49,25 @@ const Box = styled.div`
             opacity: 1;
         }
     }
+    textarea {
+        width: 100%;
+        height: 45px;
+        background-color: #F4F4F4;
+        color: #333333;
+        border: 0;
+        padding: 14px 16px;
+        margin-bottom: 14px;
+        border-radius: 20px;
+        max-height: 200px;
+        min-height: 45px;
+        max-width: 554px;
+        min-width: 100%;
+        font-family: sans-serif;
+        ::placeholder {
+            color: #333333;
+            opacity: 1;
+        }
+    }
     button {
         border: 0;
         padding: 8px 12px;

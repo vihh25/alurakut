@@ -1,13 +1,9 @@
-import Box from "../src/components/Box";
-import { pushCommunity } from "../src/components/ProfileRelations/actions";
+import { pushCommunity } from "../../src/components/ProfileRelations";
 
 export default function ComunidadeForm(props) {
 
     return (
-        <Box>
-            <h2 className="subTitle">
-                O que você deseja fazer?
-            </h2>
+        <div>
             <form onSubmit={(e) => {
                 e.preventDefault();
                 props.setLoading(true);
@@ -62,6 +58,6 @@ export default function ComunidadeForm(props) {
                     Criar comunidade
                 </button>
             </form>
-        </Box>
+        </div>
     )
 }
