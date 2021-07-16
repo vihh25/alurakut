@@ -25,7 +25,8 @@ export default function ComunidadeForm(props) {
                 const comunidade = {
                     title: dados.get('title'),
                     image: imagem,
-                    urlRef: dados.get('urlRef')
+                    urlRef: dados.get('urlRef'),
+                    criador: props.githubUser
                 };
 
                 pushCommunity(comunidade).then(() => {

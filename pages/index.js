@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import nookies from 'nookies'
+import jwt from 'jsonwebtoken'
 import Box from '../src/components/Box'
 import LoadingBox from '../src/components/LoadingBox'
 import MainGrid from '../src/components/MainGrid'
@@ -9,7 +11,7 @@ import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons'
 import ComunidadeForm from '../src/forms/ComunidadeForm'
 import ScrapForm from '../src/forms/ScrapForm'
 
-export default function Home() {
+export default function Home(props) {
 
   const [followersInfo, setFollowersInfo] = useState({});
   const [comunidades, setComunidades] = useState({comunidades: [], total: 0 });
@@ -18,7 +20,7 @@ export default function Home() {
   const [isReloadScrap, setReloadScrap] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [acao, setAcao] = useState('comunidades');
-  const githubUser = 'vihh25';
+  const { githubUser } = props;
 
   const pessoasComunidade = [
     {
@@ -54,7 +56,7 @@ export default function Home() {
 
   useEffect(async () => {
     setLoading(true);
-    getCommunities().then((response) => {
+    getCommunities({githubUser}).then((response) => {
       setLoading(false);
       if (response === undefined) {
         setComunidades([]);
@@ -67,7 +69,7 @@ export default function Home() {
 
   useEffect(async () => {
     setLoading(true);
-    getScraps().then((response) => {
+    getScraps({githubUser}).then((response) => {
       setLoading(false);
       if (response === undefined) {
         setScraps([]);
@@ -118,9 +120,11 @@ export default function Home() {
             </div>
             <br />
             { acao === 'comunidades' ?
-              <ComunidadeForm comunidades={comunidades} setReloadCommunity={setReloadCommunity} setLoading={setLoading}/>
+              <ComunidadeForm comunidades={comunidades} setReloadCommunity={setReloadCommunity} setLoading={setLoading} githubUser={githubUser}/>
               :
               <ScrapForm
+                mainGithubUser={githubUser}
+                githubUser={githubUser}
                 setLoading={(flag) => setLoading(flag)}
                 setReloadScrap={(flag) => setReloadScrap(flag)}
               />
@@ -154,4 +158,57 @@ export default function Home() {
       </MainGrid>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.USER_TOKEN;
+
+  if (!token || !cookies.USER_TOKEN) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  const { isAuthenticated } = await fetch('https://alurakut.vercel.app/api/auth', {
+    headers: {
+      Authorization: token
+    }
+  }).then((response) => response.json())
+
+  const decodedToken = jwt.decode(token);
+  const { githubUser } = decodedToken;
+  if (!isAuthenticated) {
+  
+    const resultado = await fetch(
+      `https://api.github.com/users/${githubUser}`,
+      {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+          },
+      }
+    )
+  
+    if (!resultado.ok) {
+      nookies.destroy(context, 'USER_TOKEN')
+      return {
+        redirect: {
+          destination: '/login?error=true',
+          permanent: false,
+        },
+      }
+    }
+  }
+
+  return {
+    props: {
+      githubUser
+    }
+  }
+
 }

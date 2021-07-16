@@ -1,4 +1,6 @@
 import React from 'react';
+import nookies from 'nookies';
+import { useRouter } from 'next/router';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
 
@@ -21,6 +23,7 @@ function Link({ href, children, ...props }) {
 // Menu
 // ================================================================================================================
 export function AlurakutMenu({ githubUser }) {
+  const router = useRouter();
   const [isMenuOpen, setMenuState] = React.useState(false);
   return (
     <AlurakutMenu.Wrapper isMenuOpen={isMenuOpen}>
@@ -36,7 +39,11 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/logout`}>
+          <a onClick={(e) => {
+            e.preventDefault();
+            nookies.destroy({}, 'USER_TOKEN');
+            router.push('/login');
+          }}>
             Sair
           </a>
           <div>
@@ -195,33 +202,50 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
 // AlurakutProfileSidebarMenuDefault
 // ================================================================================================================
 export function AlurakutProfileSidebarMenuDefault() {
+  const router = useRouter();
   return (
     <AlurakutProfileSidebarMenuDefault.Wrapper>
       <nav>
-        <a href="/">
+        <a onClick={(e) => {
+            e.preventDefault();
+            alert('Funcionalidade ainda em desenvolvimento');
+          }}>
           <img src={`${BASE_URL}/icons/user.svg`} />
             Perfil
           </a>
-        <a href="/">
+        <a>
           <img src={`${BASE_URL}/icons/book.svg`} />
             Recados
           </a>
-        <a href="/">
+        <a onClick={(e) => {
+            e.preventDefault();
+            alert('Funcionalidade ainda em desenvolvimento');
+          }}>
           <img src={`${BASE_URL}/icons/camera.svg`} />
             Fotos
           </a>
-        <a href="/">
+        <a onClick={(e) => {
+            e.preventDefault();
+            alert('Funcionalidade ainda em desenvolvimento');
+          }}>
           <img src={`${BASE_URL}/icons/sun.svg`} />
             Depoimentos
           </a>
       </nav>
       <hr />
       <nav>
-        <a href="/">
+        <a onClick={(e) => {
+            e.preventDefault();
+            alert('Funcionalidade ainda em desenvolvimento');
+          }}>
           <img src={`${BASE_URL}/icons/plus.svg`} />
             GitHub Trends
           </a>
-        <a href="/logout">
+        <a onClick={(e) => {
+            e.preventDefault();
+            nookies.destroy({}, 'USER_TOKEN');
+            router.push('/login');
+          }}>
           <img src={`${BASE_URL}//icons/logout.svg`} />
             Sair
           </a>
@@ -330,10 +354,10 @@ OrkutNostalgicIconSet.List = styled.ul`
 // ================================================================================================================
 const AlurakutLoginScreen = css`
   :root {
-    --backgroundPrimary: #D9E6F6;
-    --backgroundSecondary: #F1F9FE;
-    --backgroundTertiary: #FFFFFF;
-    --backgroundQuarternary: #BBCDE8;
+    --backgroundPrimary: #aabb97;
+    --backgroundSecondary: #dcedc8;
+    --backgroundTertiary: #dcedc8;
+    --backgroundQuarternary: #aabb97;
     --colorPrimary: #2E7BB4;
     --colorSecondary: #388BB0;
     --colorTertiary: #2F4A71;
@@ -436,6 +460,10 @@ const AlurakutLoginScreen = css`
           border-radius: var(--commonRadius);
           margin-top: 24px;
           margin-bottom: 16px;
+          ::placeholder {
+            color: #333333;
+            opacity: 1;
+          }
         }
         button {
           width: 100%;
@@ -443,7 +471,7 @@ const AlurakutLoginScreen = css`
           border: 0;
           padding: 12px;
           border-radius: var(--commonRadius);
-          background-color: var(--colorPrimary);
+          background-color: var(--backgroundPrimary);
           color: var(--textSecondaryColor);
         }
       }

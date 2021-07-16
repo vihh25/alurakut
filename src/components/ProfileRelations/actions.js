@@ -34,26 +34,26 @@ export async function getFollowers(user) {
 }
 
 async function getFollowersInfo(user) {
-    const urlUser = `https://api.github.com/users/${user}`;
-    const apiUserResponse = await fetch(urlUser);
+    // const urlUser = `https://api.github.com/users/${user}`;
+    // const apiUserResponse = await fetch(urlUser);
 
-    if (!apiUserResponse.ok) {
-        alert('Não foi possível retornar os dados dos seguidores. Erro HTTP: ' + apiResponseFollowers.status);
-        return;
-    }
+    // if (!apiUserResponse.ok) {
+    //     alert('Não foi possível retornar os dados dos seguidores. Erro HTTP: ' + apiResponseFollowers.status);
+    //     return;
+    // }
 
-    const apiUserJson = await apiUserResponse.json();
+    // const apiUserJson = await apiUserResponse.json();
 
     return {
         id: user,
-        title: `${user} (${apiUserJson.followers})`,
+        title: `${user}`,
         image: `https://github.com/${user}.png`,
         urlRef: `https://github.com/${user}`
     };
 }
 
-export async function getCommunities() {
-    const resultado = await fetch('/api/getComunidades')
+export async function getCommunities(props) {
+    const resultado = await fetch('/api/getComunidades?githubUser=' + props.githubUser)
 
     if (!resultado.ok) {
         alert('Não foi possível retornar as comunidades. Erro HTTP: ' + resultado.status);
@@ -71,10 +71,11 @@ export async function pushCommunity(dadosComunidade) {
         title: dadosComunidade.title,
         imageUrl: dadosComunidade.image,
         referenceUrl: dadosComunidade.urlRef,
+        creatorSlug: dadosComunidade.criador
     };
 
     await fetch(
-        'api/postComunidade', {
+        '/api/postComunidade', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -85,8 +86,8 @@ export async function pushCommunity(dadosComunidade) {
     
 }
 
-export async function getScraps() {
-    const resultado = await fetch('/api/getScraps')
+export async function getScraps(props) {
+    const resultado = await fetch('/api/getScraps?githubUser=' + props.githubUser)
 
     if (!resultado.ok) {
         alert('Não foi possível retornar os scraps. Erro HTTP: ' + resultado.status);
@@ -100,7 +101,7 @@ export async function getScraps() {
 
 export async function pushScrap(dadosScrap) {
     await fetch(
-        'api/postScrap', {
+        '/api/postScrap', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

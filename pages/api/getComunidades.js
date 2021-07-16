@@ -2,7 +2,7 @@ export default async function getCommunities (request, response) {
 
     if (request.method === 'GET') {
         const resultado = await fetch(
-            'https://graphql.datocms.com?query={allCommunities(first: 9, orderBy: [_firstPublishedAt_ASC]) {id, title, imageUrl, referenceUrl, _status, _firstPublishedAt}, _allCommunitiesMeta {count}}',
+            'https://graphql.datocms.com?query={allCommunities(first: 9, orderBy: [_firstPublishedAt_ASC], filter: {creatorSlug: {eq: ' + request.query.githubUser + '}}) {id, title, imageUrl, referenceUrl, _status, _firstPublishedAt}, _allCommunitiesMeta (filter: {creatorSlug: {eq: ' + request.query.githubUser + '}}) {count}}',
             {
                 method: 'GET',
                 headers: {
@@ -19,6 +19,7 @@ export default async function getCommunities (request, response) {
         }
     
         const resultadoJson = await resultado.json();
+
         const comunidades = resultadoJson.data.allCommunities.map((it) => {
             return {
                 id: it.id,

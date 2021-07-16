@@ -2,7 +2,7 @@ export default async function getScraps (request, response) {
 
     if (request.method === 'GET') {
         const resultado = await fetch(
-            'https://graphql.datocms.com?query={allScraps(first: 10, orderBy: [_firstPublishedAt_DESC]) {id, user, imageUrl, dateTime, message, _status, _firstPublishedAt}, _allScrapsMeta {count}}',
+            'https://graphql.datocms.com?query={allScraps(first: 10, orderBy: [_firstPublishedAt_DESC], filter: {targetUser: {eq: ' + request.query.githubUser + '}}) {id, user, imageUrl, dateTime, message, _status, _firstPublishedAt}, _allScrapsMeta (filter: {targetUser: {eq: ' + request.query.githubUser + '}}) {count}}',
             {
                 method: 'GET',
                 headers: {
